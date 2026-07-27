@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+sqlalchemy>=2.0.0
+alembic
+pydantic[email]>=2.0.0
+pydantic-settings
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==4.0.1
+python-multipart
+python-dotenv
+pypdf
+python-docx
+sentence-transformers
+pgvector
+google-genai
+networkx

@@ -1,0 +1,33 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Node/Frontend
+node_modules/
+dist/
+dist-ssr/
+*.local
+.eslintcache
+.stylelintcache
+frontend/.env
+
+# Local database / uploads
+*.db
+*.sqlite3
+backend/uploads/
+
+# OS files
+.DS_Store
+Thumbs.db
