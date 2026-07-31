@@ -7,16 +7,18 @@ from app.api import deps
 from app.models.user import User
 from app.models.contract import Contract
 from app.models.contract_chunk import ContractChunk
+from app.models.contract_entity import ContractEntity
+from app.models.contract_clause_label import ContractClauseLabel
 from app.schemas.contract import ContractOut
+from app.schemas.entity import EntityOut
+from app.schemas.clause import ClauseOut
 from app.services.file_storage import file_storage
 from app.services.document_parser import document_parser
 from app.services.chunking_service import chunking_service
 from app.services.embedding_service import embedding_service
-from app.core.database import SessionLocal
-from app.models.contract_entity import ContractEntity
-from app.models.contract_clause_label import ContractClauseLabel
 from app.services.entity_extraction_service import entity_extraction_service
 from app.services.clause_classification_service import clause_classification_service
+from app.core.database import SessionLocal
 
 router = APIRouter()
 
@@ -216,6 +218,63 @@ def download_contract(
         filename=contract.filename,
         media_type="application/octet-stream",
     )
+
+
+@router.get("/{contract_id}/entities", response_model=list[EntityOut])
+def get_contract_entities(
+    contract_id: int,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
+):
+    """
+    List extracted named entities (orgs, people, dates, money, locations) for a contract.
+    """
+    contract = db.query(Contract).filter(Contract.id == contract_id).first()
+    if not contract:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contract not found")
+    if current_user.role not in ["admin", "legal_reviewer"] and contract.uploaded_by_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You don't have permission to access this contract",
+        )
+
+    return db.query(ContractEntity).filter(ContractEntity.contract_id == contract_id).all()
+
+
+@router.get("/{contract_id}/clauses", response_model=list[ClauseOut])
+def get_contract_clauses(
+    contract_id: int,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
+):
+    """
+    List classified clauses (type + confidence + source text) for a contract.
+    """
+    contract = db.query(Contract).filter(Contract.id == contract_id).first()
+    if not contract:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Contract not found")
+    if current_user.role not in ["admin", "legal_reviewer"] and contract.uploaded_by_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You don't have permission to access this contract",
+        )
+
+    results = (
+        db.query(ContractClauseLabel, ContractChunk.chunk_text)
+        .join(ContractChunk, ContractClauseLabel.chunk_id == ContractChunk.id)
+        .filter(ContractChunk.contract_id == contract_id)
+        .all()
+    )
+    return [
+        ClauseOut(
+            id=label.id,
+            chunk_id=label.chunk_id,
+            clause_type=label.clause_type,
+            confidence_score=label.confidence_score,
+            chunk_text=chunk_text,
+        )
+        for label, chunk_text in results
+    ]
 
 
 @router.delete("/{contract_id}", status_code=status.HTTP_204_NO_CONTENT)

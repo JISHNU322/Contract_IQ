@@ -1,12 +1,13 @@
 import { type ReactNode, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { LayoutGrid, Upload, Share2, LogOut, Menu } from "lucide-react";
+import { LayoutGrid, Upload, Share2, LogOut, Menu, MessageSquare } from "lucide-react";
 import { Logo } from "./Logo";
 import { useAuth } from "../context/AuthContext";
 
 const NAV_ITEMS = [
   { to: "/dashboard", label: "Contracts", icon: LayoutGrid },
   { to: "/upload", label: "Upload", icon: Upload },
+  { to: "/chat", label: "Ask Across Contracts", icon: MessageSquare },
   { to: "/graph", label: "Knowledge Graph", icon: Share2 },
 ];
 

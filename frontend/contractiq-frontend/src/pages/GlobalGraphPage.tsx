@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Loader2, Share2 } from "lucide-react";
 import { AppShell } from "../components/AppShell";
-import { GraphCanvas, GraphLegend } from "../components/GraphCanvas";
+import { GraphCanvas } from "../components/GraphCanvas";
 import { getGlobalGraph } from "../api/chat";
 import type { GraphData } from "../types";
 
@@ -39,11 +39,13 @@ export function GlobalGraphPage() {
             </div>
           ) : (
             <>
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-3 flex items-center justify-between">
                 <p className="text-sm text-ink-muted">
                   {data.nodes.length} nodes · {data.edges.length} connections
                 </p>
-                <GraphLegend />
+                <p className="text-xs text-ink-faint">
+                  Drag nodes · scroll to zoom · click a node for details
+                </p>
               </div>
               <GraphCanvas data={data} />
             </>

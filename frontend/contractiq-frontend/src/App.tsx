@@ -6,6 +6,7 @@ import { Dashboard } from "./pages/Dashboard";
 import { UploadPage } from "./pages/UploadPage";
 import { ContractDetail } from "./pages/ContractDetail";
 import { GlobalGraphPage } from "./pages/GlobalGraphPage";
+import { GlobalChatPage } from "./pages/GlobalChatPage";
 
 export default function App() {
   return (
@@ -42,6 +43,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <GlobalGraphPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <GlobalChatPage />
               </ProtectedRoute>
             }
           />
