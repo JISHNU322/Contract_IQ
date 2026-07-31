@@ -256,7 +256,7 @@ LLM Response
 
 > Add screenshots of:
 
-![Login Page]("Screenshots\createacc.png.png")
+-Login Page
 - Dashboard
 - Upload Contract
 - AI Chat
