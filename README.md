@@ -256,7 +256,7 @@ LLM Response
 
 > Add screenshots of:
 
-![Login Page]("D:\OneDrive\画像\Screenshots\createacc.png.png")
+![Login Page]("Screenshots\createacc.png.png")
 - Dashboard
 - Upload Contract
 - AI Chat
